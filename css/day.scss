@@ -1,0 +1,145 @@
+@import "./settings";
+
+.startAndDuration{
+    .start, .duration{
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+        color: $text-main;
+        h3{
+            font-size: 1.5em;
+        }
+        p{
+            display: flex;
+            align-items: center;
+            padding-top: 8px;
+            font-size: 1.2em;
+            &::before, &::after{
+                content: "";
+                position: relative;
+                bottom: 2px;
+                flex: 1;
+                height: 2px;
+                background: $border-soft;
+                margin: 0 5%;
+            }
+        }
+    }
+    .start{
+        background: $border-soft;
+        p{
+            &::before, &::after{
+                background: $text-muted;
+            }
+        }
+    }
+    .duration{
+        color: $glow-blue;
+        p{
+            color: $glow-yellow;
+            font-size: 1.5em;
+        }
+    }
+}
+
+.btnActivities{
+    background: $bg-main !important;
+    gap: 12px;
+    button{
+        border: none;
+        padding: 18px 0;
+        color: $text-main;
+        font-size: 1.1em;
+        cursor: pointer;
+    }
+    .startBtn{
+        background: $service;
+    }
+    .workBtn{
+        background: $drive;
+    }
+    .waitingBtn{
+        background: $waiting;
+    }
+    .restBtn{
+        background: $rest;
+    }
+    .endBtn{
+        background: $finish;
+    }
+    .disabled{
+        background: $text-muted;
+        color: $bg-main;
+        cursor: auto;
+    }
+
+    .endOfDay{
+        text-align: center;
+        margin: 0;
+        color: $glow-yellow;
+        font-family: "Orbitron", sans-serif;
+        height: 0;
+        overflow: hidden;
+    }
+    .showEndOfDay{
+        height: 20px;
+        transition: height 0.4s ease-in-out;
+    }
+}
+
+.dayJournal{
+    h3{
+        display: flex;
+        align-items: center;
+        padding-top: 8px;
+        font-size: 1.2em;
+        &::before, &::after{
+                content: "";
+                position: relative;
+                bottom: 2px;
+                flex: 1;
+                height: 2px;
+                background: $border-soft;
+                margin: 0 5%;
+            }
+    }
+    .hidden{
+        display: none;
+    }
+    .detailOfActivities, .resumeOfActivities{
+        list-style-type: none;
+        padding: 0;
+        max-width: 90%;
+        width: 100%;
+        margin: 0 auto;
+        font-size: 0.9em;
+        li{
+            display: grid;
+            grid-template-columns: 75% 25%;
+            justify-content: space-between;
+            font-family: "Inter", sans-serif;
+            padding: 4px 0;
+            border-bottom: 1px solid $border-soft;
+            div{
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                font-family: "Inter", sans-serif;
+                color: $stat-wait;
+                align-self: flex-end;
+            }
+        }
+    }
+    .resumeOfActivities{
+        padding-bottom: 24px;
+        li{
+            display: flex;
+            span{
+                &:nth-child(2){
+                    color: $stat-wait;
+                }
+            }
+        }
+    }
+}

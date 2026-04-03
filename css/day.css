@@ -1,0 +1,257 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600&family=Inter:wght@400;500&display=swap");
+/* ---------- BACKGROUND ---------- */
+/* ---------- TEXT ---------- */
+/* ---------- BORDER / UI ---------- */
+/* ---------- ACTION COLORS ---------- */
+/* prise de service */
+/* conduite */
+/* attente */
+/* repos */
+/* fin de journée */
+/* ---------- STATS COLORS ---------- */
+/* ---------- EFFECTS ---------- */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  background: rgb(36, 36, 36);
+}
+body h3, body button {
+  font-family: "Orbitron", sans-serif;
+}
+body p, body ul {
+  font-family: "Inter", sans-serif;
+}
+body .container {
+  max-width: 500px;
+  width: 100%;
+  background: hsl(235, 78%, 13%);
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 18px;
+  padding-bottom: 100px;
+}
+body .container header, body .container section {
+  max-width: 90%;
+  width: 100%;
+}
+body .container header {
+  font-family: "Orbitron", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+body .container header h1 {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: hsl(208, 77%, 51%);
+  background: hsl(234, 72%, 22%);
+  font-size: 1.5em;
+  text-align: center;
+  padding: 12px 4px;
+  border: 2px solid hsl(235, 40%, 45%);
+}
+body .container header h1 img {
+  width: 15%;
+  padding-right: 12px;
+}
+body .container header h1 span {
+  color: hsl(46, 91%, 50%);
+}
+body .container header h2 {
+  width: 75%;
+  margin: 0;
+  text-align: center;
+  background: hsl(234, 72%, 22%);
+  color: hsl(0, 0%, 100%);
+  font-size: 1.3em;
+  padding: 8px 0;
+  align-self: center;
+  border-bottom-left-radius: 45px;
+  border-bottom-right-radius: 45px;
+  border: 2px solid hsl(235, 40%, 45%);
+  border-top: none;
+}
+body .container section {
+  background: hsl(235, 62%, 33%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: hsl(0, 0%, 100%);
+}
+body .container footer {
+  position: fixed;
+  bottom: 0;
+  max-width: 500px;
+  width: 100%;
+  border-top: 4px solid hsl(235, 40%, 45%);
+  padding-top: 8px;
+  background: #202988;
+}
+body .container footer ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+  margin: 5px 0;
+  padding: 0;
+}
+body .container footer ul li {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+body .container footer ul li:hover {
+  transform: scale(1.1);
+}
+body .container footer ul li:hover svg {
+  fill: hsl(208, 100%, 65%);
+}
+body .container footer ul li svg {
+  width: 40px;
+  fill: hsl(46, 100%, 60%);
+  transition: fill 0.1s ease-in-out;
+}
+
+.startAndDuration .start, .startAndDuration .duration {
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  color: hsl(0, 0%, 100%);
+}
+.startAndDuration .start h3, .startAndDuration .duration h3 {
+  font-size: 1.5em;
+}
+.startAndDuration .start p, .startAndDuration .duration p {
+  display: flex;
+  align-items: center;
+  padding-top: 8px;
+  font-size: 1.2em;
+}
+.startAndDuration .start p::before, .startAndDuration .start p::after, .startAndDuration .duration p::before, .startAndDuration .duration p::after {
+  content: "";
+  position: relative;
+  bottom: 2px;
+  flex: 1;
+  height: 2px;
+  background: hsl(235, 40%, 45%);
+  margin: 0 5%;
+}
+.startAndDuration .start {
+  background: hsl(235, 40%, 45%);
+}
+.startAndDuration .start p::before, .startAndDuration .start p::after {
+  background: hsl(210, 20%, 65%);
+}
+.startAndDuration .duration {
+  color: hsl(208, 100%, 65%);
+}
+.startAndDuration .duration p {
+  color: hsl(46, 100%, 60%);
+  font-size: 1.5em;
+}
+
+.btnActivities {
+  background: hsl(235, 78%, 13%) !important;
+  gap: 12px;
+}
+.btnActivities button {
+  border: none;
+  padding: 18px 0;
+  color: hsl(0, 0%, 100%);
+  font-size: 1.1em;
+  cursor: pointer;
+}
+.btnActivities .startBtn {
+  background: hsl(109, 71%, 38%);
+}
+.btnActivities .workBtn {
+  background: hsl(208, 77%, 51%);
+}
+.btnActivities .waitingBtn {
+  background: hsl(46, 91%, 50%);
+}
+.btnActivities .restBtn {
+  background: hsl(270, 60%, 55%);
+}
+.btnActivities .endBtn {
+  background: hsl(12, 71%, 46%);
+}
+.btnActivities .disabled {
+  background: hsl(210, 20%, 65%);
+  color: hsl(235, 78%, 13%);
+  cursor: auto;
+}
+.btnActivities .endOfDay {
+  text-align: center;
+  margin: 0;
+  color: hsl(46, 100%, 60%);
+  font-family: "Orbitron", sans-serif;
+  height: 0;
+  overflow: hidden;
+}
+.btnActivities .showEndOfDay {
+  height: 20px;
+  transition: height 0.4s ease-in-out;
+}
+
+.dayJournal h3 {
+  display: flex;
+  align-items: center;
+  padding-top: 8px;
+  font-size: 1.2em;
+}
+.dayJournal h3::before, .dayJournal h3::after {
+  content: "";
+  position: relative;
+  bottom: 2px;
+  flex: 1;
+  height: 2px;
+  background: hsl(235, 40%, 45%);
+  margin: 0 5%;
+}
+.dayJournal .hidden {
+  display: none;
+}
+.dayJournal .detailOfActivities, .dayJournal .resumeOfActivities {
+  list-style-type: none;
+  padding: 0;
+  max-width: 90%;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 0.9em;
+}
+.dayJournal .detailOfActivities li, .dayJournal .resumeOfActivities li {
+  display: grid;
+  grid-template-columns: 75% 25%;
+  justify-content: space-between;
+  font-family: "Inter", sans-serif;
+  padding: 4px 0;
+  border-bottom: 1px solid hsl(235, 40%, 45%);
+}
+.dayJournal .detailOfActivities li div, .dayJournal .resumeOfActivities li div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: "Inter", sans-serif;
+  color: hsl(46, 91%, 50%);
+  align-self: flex-end;
+}
+.dayJournal .resumeOfActivities {
+  padding-bottom: 24px;
+}
+.dayJournal .resumeOfActivities li {
+  display: flex;
+}
+.dayJournal .resumeOfActivities li span:nth-child(2) {
+  color: hsl(46, 91%, 50%);
+}/*# sourceMappingURL=day.css.map */
