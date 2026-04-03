@@ -129,7 +129,7 @@ body .container footer ul li svg {
   color: hsl(0, 0%, 100%);
 }
 .startAndDuration .start h3, .startAndDuration .duration h3 {
-  font-size: 1.5em;
+  font-size: 1.4em;
 }
 .startAndDuration .start p, .startAndDuration .duration p {
   display: flex;
@@ -157,7 +157,7 @@ body .container footer ul li svg {
 }
 .startAndDuration .duration p {
   color: hsl(46, 100%, 60%);
-  font-size: 1.5em;
+  font-size: 1.4em;
 }
 
 .btnActivities {
