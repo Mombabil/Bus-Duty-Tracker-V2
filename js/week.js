@@ -143,6 +143,8 @@ const createDayArticle = (day) => {
   // on ajoute le tout dans article
   article.appendChild(title);
 
+  // ----- PARTIE CONCERNE PAR L'EDIT DE DATAS -----
+
   // .dayDetail
   // on crée les details de la journée
   const detail = document.createElement("section");
@@ -184,6 +186,8 @@ const createDayArticle = (day) => {
 
   // on l'ajoute dans article a la suite de title
   article.appendChild(detail);
+
+  // ----- FIN DE PARTIE CONCERNE PAR L'EDIT DE DATAS -----
 
   // .dayRecap
   const recap = document.createElement("section");
