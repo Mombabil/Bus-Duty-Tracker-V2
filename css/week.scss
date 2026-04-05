@@ -28,6 +28,12 @@
     }
 }
 
+.daysContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 .day{
     .dayTitle{
         max-width: 100%;
@@ -134,7 +140,7 @@
                         }
                     }
                     p{
-                        font-size: 0.8em;
+                        font-size: 0.7em;
                         font-family: "Orbitron", sans-serif;
                         display: flex;
                         justify-content: space-between;
@@ -145,7 +151,7 @@
                     .time{
                         justify-content: flex-end;
                         span{
-                            padding-right: 12px;
+                            padding-right: 2px;
                             &:nth-child(1){
                                 padding: 4px;
                             }
@@ -160,7 +166,6 @@
                             height: 30px;
                             cursor: pointer;
                             position: relative;
-
                             svg{
                                 width: 20px;
                                 height: 20px;

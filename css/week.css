@@ -150,6 +150,12 @@ body .container footer ul li svg {
   font-family: "Inter", sans-serif;
 }
 
+.daysContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .day .dayTitle {
   max-width: 100%;
   width: 100%;
@@ -255,7 +261,7 @@ body .container footer ul li svg {
   background: hsl(270, 60%, 55%);
 }
 .day .dayDetail .type p {
-  font-size: 0.8em;
+  font-size: 0.7em;
   font-family: "Orbitron", sans-serif;
   display: flex;
   justify-content: space-between;
@@ -267,7 +273,7 @@ body .container footer ul li svg {
   justify-content: flex-end;
 }
 .day .dayDetail .type .time span {
-  padding-right: 12px;
+  padding-right: 2px;
 }
 .day .dayDetail .type .time span:nth-child(1) {
   padding: 4px;
