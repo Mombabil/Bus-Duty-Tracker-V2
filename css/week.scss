@@ -174,7 +174,9 @@
                                 top: 5px;
                                 right: 5px;
                                 z-index: 0;
+                                // gestion mobile
                                 pointer-events: none;
+                                touch-action: manipulation;
                             }
                         }
                         .editable-start, .editable-end{
