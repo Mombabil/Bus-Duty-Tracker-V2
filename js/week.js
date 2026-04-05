@@ -1,11 +1,11 @@
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker
-      .register("./service-worker.js")
-      .then(() => console.log("Service Worker enregistré"))
-      .catch((err) => console.log("Erreur SW:", err));
-  });
-}
+// if ("serviceWorker" in navigator) {
+//   window.addEventListener("load", () => {
+//     navigator.serviceWorker
+//       .register("./service-worker.js")
+//       .then(() => console.log("Service Worker enregistré"))
+//       .catch((err) => console.log("Erreur SW:", err));
+//   });
+// }
 
 // recupere le nom du jour en lettre
 import { getNameOfDayFromDate } from "./utils/getNameOfDayFromDate.js";
