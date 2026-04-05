@@ -347,13 +347,8 @@ currentDate.addEventListener("change", (e) => {
 });
 
 // passage du mode lecture au mode edit des datas
-daysContainer.addEventListener("pointerdown", (e) => {
-  let btnEdit = e.target;
-
-  while (btnEdit && !btnEdit.classList?.contains("editBtn")) {
-    btnEdit = btnEdit.parentElement;
-  }
-
+daysContainer.addEventListener("click", (e) => {
+  const btnEdit = e.target.closest(".editBtn");
   if (!btnEdit) return;
 
   const day = state.days.find((d) => d.id == btnEdit.dataset.dayId);
