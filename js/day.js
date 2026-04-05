@@ -354,7 +354,7 @@ startBtn.addEventListener("click", () => {
 });
 workBtn.addEventListener("click", () => {
   getStateBtns("work");
-  addData("work", "Reprise conduite/travail");
+  addData("work", "Conduite/travail");
 });
 waitingBtn.addEventListener("click", () => {
   getStateBtns("waiting");
