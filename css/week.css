@@ -263,14 +263,40 @@ body .container footer ul li svg {
   width: 100%;
   color: hsl(210, 30%, 85%);
 }
-.day .dayDetail .type p span {
-  font-size: 0.9em;
-}
 .day .dayDetail .type .time {
   justify-content: flex-end;
 }
 .day .dayDetail .type .time span {
   padding-right: 12px;
+}
+.day .dayDetail .type .time span:nth-child(1) {
+  padding: 4px;
+}
+.day .dayDetail .type .time span:nth-child(1)::after {
+  content: " - ";
+}
+.day .dayDetail .type .time button {
+  border: none;
+  background: transparent;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  position: relative;
+}
+.day .dayDetail .type .time button svg {
+  width: 20px;
+  height: 20px;
+  fill: hsl(0, 0%, 100%);
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 0;
+}
+.day .dayDetail .type .time .editable-start, .day .dayDetail .type .time .editable-end {
+  width: 67px;
+}
+.day .dayDetail .type .time .error {
+  border: 2px solid red;
 }
 .day .dayRecap {
   max-width: 90%;

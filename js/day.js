@@ -10,6 +10,12 @@ if ("serviceWorker" in navigator) {
 
 import { getCurrentDate } from "./utils/getCurrentDate.js";
 import { getCurrentWeek } from "./utils/getCurrentWeek.js";
+import {
+  pad,
+  toHHMM,
+  calcAmp,
+  getTotalsByType,
+} from "./utils/datasFormating.js";
 
 // SELECTION DES BALISES
 const currentDate = document.querySelector(".currentDate");
@@ -58,12 +64,14 @@ const addDay = () => {
       state: "work",
       datas: [
         {
+          id: Date.now(),
           start: now,
           end: "",
           amplitude: "",
           isFinished: false,
           type: "work",
           detail: "Prise de service",
+          isEditing: false,
         },
       ],
     },
@@ -85,9 +93,11 @@ const addData = (type, detail) => {
       data === currentData
         ? {
             ...data,
+            id: Date.now(),
             end: now,
             amplitude: toHHMM(calcAmp(data.start, now)),
             isFinished: true,
+            isEditing: false,
           }
         : data,
     );
@@ -124,6 +134,8 @@ const endData = () => {
             end: now,
             amplitude: toHHMM(calcAmp(data.start, now)),
             isFinished: true,
+            id: Date.now(),
+            isEditing: false,
           }
         : data,
     );
@@ -160,50 +172,6 @@ const getTime = () => {
   const startOfDay = `${hours}:${minutes}:${seconds}`;
 
   return startOfDay;
-};
-const calcAmp = (startData, endData) => {
-  const start = toMinutes(startData.slice(0, 5));
-  const end = toMinutes(endData.slice(0, 5));
-
-  return end - start;
-};
-const getTotalsByType = (datas) => {
-  const totals = {
-    work: 0,
-    waiting: 0,
-    rest: 0,
-  };
-
-  datas.forEach((data) => {
-    if (!data.isFinished) return;
-
-    const minutes = toMinutes(data.amplitude);
-
-    totals[data.type] += minutes;
-  });
-
-  // conversion finale en HH:MM
-  Object.keys(totals).forEach((type) => {
-    totals[type] = toHHMM(totals[type]);
-  });
-
-  return totals;
-};
-
-// LES FONCTIONS DE FORMATAGE DE DATAS
-const pad = (num) => {
-  return num.toString().padStart(2, "0");
-};
-const toMinutes = (time) => {
-  const [h, m] = time.split(":").map(Number);
-
-  return h * 60 + m;
-};
-const toHHMM = (minutes) => {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-
-  return `${pad(h)}:${pad(m)}`;
 };
 
 // LE CHRONOMETRE
