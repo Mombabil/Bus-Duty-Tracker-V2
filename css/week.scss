@@ -28,13 +28,8 @@
     }
 }
 
-.daysContainer{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
 .day{
+    margin-bottom: 12px;
     .dayTitle{
         max-width: 100%;
         width: 100%;

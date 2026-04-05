@@ -394,5 +394,3 @@ try {
 }
 
 render(currentWeek);
-
-console.log(daysContainer);
