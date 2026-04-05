@@ -297,6 +297,7 @@ body .container footer ul li svg {
   top: 5px;
   right: 5px;
   z-index: 0;
+  pointer-events: none;
 }
 .day .dayDetail .type .time .editable-start, .day .dayDetail .type .time .editable-end {
   width: 67px;
