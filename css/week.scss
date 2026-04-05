@@ -32,8 +32,10 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    background: transparent !important;
 }
 .day{
+    background: $bg-panel;
     .dayTitle{
         max-width: 100%;
         width: 100%;
