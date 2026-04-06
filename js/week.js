@@ -43,24 +43,34 @@ const today = new Date();
 const currentWeek = getCurrentWeek(today);
 const getWeek = (st) => {
   const weeks = st.days.map((day) => day.week);
-  return [...new Set(weeks)]; // renvoie seulement les semaines uniques
+
+  // renvoie seulement les semaines uniques
+  return [...new Set(weeks)];
 };
 const createListOfWeeks = (defaultWeek) => {
   currentDate.innerHTML = "";
 
   const listOfWeek = getWeek(state);
 
-  listOfWeek.forEach((w) => {
-    const opt = document.createElement("option");
-    opt.value = w;
-    opt.textContent = w === currentWeek ? w + " (actuelle)" : w;
+  if (listOfWeek.includes(defaultWeek)) {
+    listOfWeek.forEach((w) => {
+      const opt = document.createElement("option");
+      opt.value = w;
+      opt.textContent = w === currentWeek ? w + " (actuelle)" : w;
 
-    if (w === defaultWeek) {
-      opt.selected = true;
-    }
+      if (w === defaultWeek) {
+        opt.selected = true;
+      }
+
+      currentDate.appendChild(opt);
+    });
+  } else {
+    const opt = document.createElement("option");
+    opt.value = defaultWeek;
+    opt.textContent = defaultWeek + " (actuelle)";
 
     currentDate.appendChild(opt);
-  });
+  }
 };
 
 // LA TIMELINE
@@ -318,8 +328,6 @@ const render = (week) => {
   // on recupere toutes les journées qui ont la même semaine que la semaine en cours
   const daysOfSelectedWeek = state.days.filter((day) => day.week === week);
 
-  createListOfWeeks(currentWeek.value);
-
   daysContainer.innerHTML = "";
 
   const fragmentDay = document.createDocumentFragment();
@@ -392,5 +400,7 @@ try {
 } catch (error) {
   console.error("Erreur lors du chargement des tâches");
 }
+
+createListOfWeeks(currentWeek);
 
 render(currentWeek);
