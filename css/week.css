@@ -156,6 +156,12 @@ body .container footer ul li svg {
   gap: 12px;
   background: transparent !important;
 }
+.daysContainer .noDays {
+  text-align: center;
+  color: hsl(46, 100%, 60%);
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.3em;
+}
 
 .day {
   background: hsl(235, 62%, 33%);

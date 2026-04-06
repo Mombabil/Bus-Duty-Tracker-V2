@@ -41,6 +41,7 @@ const setState = (newState) => {
 // on recupere le numero de la semaine en cours
 const today = new Date();
 const currentWeek = getCurrentWeek(today);
+
 const getWeek = (st) => {
   const weeks = st.days.map((day) => day.week);
 
@@ -324,11 +325,20 @@ const render = (week) => {
   // on recupere toutes les journées qui ont la même semaine que la semaine en cours
   const daysOfSelectedWeek = state.days.filter((day) => day.week === week);
 
+  console.log(daysOfSelectedWeek);
+
   daysContainer.innerHTML = "";
 
   const fragmentDay = document.createDocumentFragment();
 
-  if (daysOfSelectedWeek.length === 0) return;
+  if (daysOfSelectedWeek.length === 0) {
+    const noDaysInSelectedWeek = document.createElement("p");
+    noDaysInSelectedWeek.classList.add("noDays");
+    noDaysInSelectedWeek.textContent =
+      "Vous n'avez pas encore créé de journées dans la semaine " + week;
+
+    fragmentDay.appendChild(noDaysInSelectedWeek);
+  }
 
   daysOfSelectedWeek.forEach((day) => {
     // la journée en cours n'apparait que lorsqu'elle est terminée

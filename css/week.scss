@@ -33,6 +33,13 @@
     flex-direction: column;
     gap: 12px;
     background: transparent !important;
+
+    .noDays{
+        text-align: center;
+        color: $glow-yellow;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.3em;
+    }
 }
 .day{
     background: $bg-panel;
