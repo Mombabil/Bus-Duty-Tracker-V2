@@ -52,25 +52,21 @@ const createListOfWeeks = (defaultWeek) => {
 
   const listOfWeek = getWeek(state);
 
-  if (listOfWeek.includes(defaultWeek)) {
-    listOfWeek.forEach((w) => {
-      const opt = document.createElement("option");
-      opt.value = w;
-      opt.textContent = w === currentWeek ? w + " (actuelle)" : w;
+  if (!listOfWeek.includes(defaultWeek)) {
+    listOfWeek.push(defaultWeek);
+  }
 
-      if (w === defaultWeek) {
-        opt.selected = true;
-      }
-
-      currentDate.appendChild(opt);
-    });
-  } else {
+  listOfWeek.forEach((w) => {
     const opt = document.createElement("option");
-    opt.value = defaultWeek;
-    opt.textContent = defaultWeek + " (actuelle)";
+    opt.value = w;
+    opt.textContent = w === currentWeek ? w + " (actuelle)" : w;
+
+    if (w === defaultWeek) {
+      opt.selected = true;
+    }
 
     currentDate.appendChild(opt);
-  }
+  });
 };
 
 // LA TIMELINE
