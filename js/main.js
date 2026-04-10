@@ -16,6 +16,7 @@ import {
   calcAmp,
   getTotalsByType,
 } from "./utils/datasFormating.js";
+import { fetchDays, saveDay, updateDay } from "../api/daysApi.js";
 
 // SELECTION DES BALISES
 const currentDate = document.querySelector(".currentDate");
@@ -30,9 +31,11 @@ const startTime = document.querySelector(".startTime");
 const currentAmplitude = document.querySelector(".currentAmplitude");
 const hidden = document.querySelector(".hidden");
 const msgEndOfDay = document.querySelector(".endOfDay");
+
 // LE STATE
 const state = { days: [] };
 
+// setState MODIFIÉ
 const setState = (newState) => {
   const updatedState = {
     ...state,
@@ -40,8 +43,6 @@ const setState = (newState) => {
   };
 
   state.days = updatedState.days;
-
-  localStorage.setItem("days", JSON.stringify(state.days));
 
   render();
 };
@@ -77,10 +78,13 @@ const addDay = () => {
     },
   ];
 
+  // on envoie seulement le nouveau jour
+  saveDay(newDay[newDay.length - 1]);
   setState({ days: newDay });
 
   console.log("Render exécuté");
 };
+
 const addData = (type, detail) => {
   const newDays = state.days.map((day) => {
     if (day.isFinished) return day;
@@ -120,7 +124,14 @@ const addData = (type, detail) => {
   });
 
   setState({ days: newDays });
+
+  // sauvegarde uniquement le jour modifié
+  const updatedDay = newDays.find((day) => !day.isFinished);
+  if (updatedDay) {
+    updateDay(updatedDay);
+  }
 };
+
 const endData = () => {
   const newDays = state.days.map((day) => {
     const currentData = day.datas.find((data) => !data.isFinished);
@@ -154,6 +165,12 @@ const endData = () => {
   });
 
   setState({ days: newDays });
+
+  // sauvegarde le jour terminé
+  const finishedDay = newDays.find((day) => day.isFinished);
+  if (finishedDay) {
+    updateDay(finishedDay);
+  }
 };
 
 // LES FONCTIONS DE DATAS
@@ -164,7 +181,6 @@ const getTime = () => {
   let minutes = time.getMinutes();
   let seconds = time.getSeconds();
 
-  // Ajoute 0 si les heures/minutes < 10
   hours = pad(hours);
   minutes = pad(minutes);
   seconds = pad(seconds);
@@ -177,13 +193,11 @@ const getTime = () => {
 // LE CHRONOMETRE
 let chronoInterval = null;
 const updateChrono = (array) => {
-  // chronometre
   const arrayStart = array.split(":");
   const startHour = Number(arrayStart[0]);
   const startMinute = Number(arrayStart[1]);
   const startSecond = Number(arrayStart[2]);
 
-  // config heure de départ
   let startDateTime = new Date();
   startDateTime.setHours(startHour, startMinute, startSecond, 0);
   const now = new Date();
@@ -196,6 +210,7 @@ const updateChrono = (array) => {
 
   currentAmplitude.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 };
+
 // LES BOUTONS
 const getStateBtns = (stateBtns) => {
   let disabledBtns = [];
@@ -236,24 +251,17 @@ const getStateBtns = (stateBtns) => {
   });
 };
 
-// LE RENDER
+// LE RENDER (inchangé)
 const render = () => {
   const today = new Date().toLocaleDateString("fr-FR");
 
   const currentDay = state.days.find((day) => day.date === today);
-  // on cherche si il y a une journée en cours
   const activeDay = state.days.find((day) => !day.isFinished);
 
-  // JOURNAL DE LA JOURNEE
-  // si currentDay existe
   if (currentDay) {
-    // les btn prennent le state correspondant (attribués lors des click)
     getStateBtns(currentDay.state);
-
-    // on affiche l'heure de début de service (sans les secondes)
     startTime.textContent = currentDay.start.slice(0, 5).replace(":", "h");
 
-    // Mécanique du chronometre
     if (!chronoInterval) {
       chronoInterval = setInterval(() => {
         updateChrono(currentDay.start);
@@ -261,9 +269,7 @@ const render = () => {
     }
     updateChrono(currentDay.start);
 
-    // affichage du journal de la journée
     detailOfActivities.innerHTML = "";
-
     const fragmentDetail = document.createDocumentFragment();
 
     currentDay.datas.forEach((data) => {
@@ -272,13 +278,11 @@ const render = () => {
       const startAndEndSpan = document.createElement("div");
       const startSpan = document.createElement("span");
       const endSpan = document.createElement("span");
+
       detailSpan.textContent = data.detail;
       startSpan.textContent = data.start.slice(0, 5).replace(":", "h");
-      if (data.end === "") {
-        endSpan.textContent = "--:--";
-      } else {
-        endSpan.textContent = data.end.slice(0, 5).replace(":", "h");
-      }
+      endSpan.textContent =
+        data.end === "" ? "--:--" : data.end.slice(0, 5).replace(":", "h");
 
       li.appendChild(detailSpan);
       startAndEndSpan.appendChild(startSpan);
@@ -290,60 +294,49 @@ const render = () => {
     detailOfActivities.appendChild(fragmentDetail);
   }
 
-  // RESUME DE LA JOURNEE
-  // si il n'y a plus de journée en cours
-  if (!activeDay) {
-    if (currentDay) {
-      msgEndOfDay.classList.add("showEndOfDay");
-      hidden.classList.remove("hidden");
-      startTime.textContent = "00:00";
-      clearInterval(chronoInterval);
-      chronoInterval = null;
-      currentAmplitude.textContent = "00:00:00";
+  if (!activeDay && currentDay) {
+    msgEndOfDay.classList.add("showEndOfDay");
+    hidden.classList.remove("hidden");
+    startTime.textContent = "00:00";
+    clearInterval(chronoInterval);
+    chronoInterval = null;
+    currentAmplitude.textContent = "00:00:00";
 
-      // affichage du résumé de la journée
-      resumeOfActivities.innerHTML = "";
+    resumeOfActivities.innerHTML = "";
+    const fragmentResume = document.createDocumentFragment();
 
-      const fragmentResume = document.createDocumentFragment();
+    const summaryConfig = [
+      { key: "work", label: "Travail/Conduite" },
+      { key: "waiting", label: "Attente sur place" },
+      { key: "rest", label: "Repos interservices" },
+    ];
 
-      const summaryConfig = [
-        { key: "work", label: "Travail/Conduite" },
-        { key: "waiting", label: "Attente sur place" },
-        { key: "rest", label: "Repos interservices" },
-      ];
+    summaryConfig.forEach(({ key, label }) => {
+      const li = document.createElement("li");
+      const labelSpan = document.createElement("span");
+      const valueSpan = document.createElement("span");
 
-      summaryConfig.forEach(({ key, label }) => {
-        const li = document.createElement("li");
+      labelSpan.textContent = label;
+      const value = currentDay.totals[key] || "00:00";
+      valueSpan.textContent = value.replace(":", "h");
 
-        const labelSpan = document.createElement("span");
-        const valueSpan = document.createElement("span");
+      li.appendChild(labelSpan);
+      li.appendChild(valueSpan);
+      fragmentResume.appendChild(li);
+    });
 
-        labelSpan.textContent = label;
+    const amplitudeLi = document.createElement("li");
+    const ampLabel = document.createElement("span");
+    const ampValue = document.createElement("span");
 
-        const value = currentDay.totals[key] || "00:00";
-        valueSpan.textContent = value.replace(":", "h");
+    ampLabel.textContent = "Amplitude";
+    ampValue.textContent = currentDay.amplitude.replace(":", "h");
 
-        li.appendChild(labelSpan);
-        li.appendChild(valueSpan);
+    amplitudeLi.appendChild(ampLabel);
+    amplitudeLi.appendChild(ampValue);
+    fragmentResume.appendChild(amplitudeLi);
 
-        fragmentResume.appendChild(li);
-      });
-
-      const amplitudeLi = document.createElement("li");
-
-      const ampLabel = document.createElement("span");
-      const ampValue = document.createElement("span");
-
-      ampLabel.textContent = "Amplitude";
-      ampValue.textContent = currentDay.amplitude.replace(":", "h");
-
-      amplitudeLi.appendChild(ampLabel);
-      amplitudeLi.appendChild(ampValue);
-
-      fragmentResume.appendChild(amplitudeLi);
-
-      resumeOfActivities.appendChild(fragmentResume);
-    }
+    resumeOfActivities.appendChild(fragmentResume);
   }
 };
 
@@ -368,18 +361,19 @@ endBtn.addEventListener("click", () => {
   getStateBtns("end");
   endData();
 });
-// INITIALISATION
-try {
-  const savedDays = localStorage.getItem("days");
 
-  // si le local storage n'est pas vide, on retransforme les données JSON en tableau pour gérer l'affichage
-  if (savedDays) {
-    state.days = JSON.parse(savedDays);
+// INITIALISATION MODIFIÉE
+async function init() {
+  try {
+    const days = await fetchDays();
+    state.days = days;
+  } catch (error) {
+    console.error("Erreur lors du chargement des données");
   }
-} catch (error) {
-  console.error("Erreur lors du chargement des tâches");
+
+  currentDate.textContent = getCurrentDate();
+  getStateBtns("start");
+  render();
 }
 
-currentDate.textContent = getCurrentDate();
-getStateBtns("start");
-render();
+init();

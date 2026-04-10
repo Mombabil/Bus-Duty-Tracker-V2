@@ -1,12 +1,3 @@
-// if ("serviceWorker" in navigator) {
-//   window.addEventListener("load", () => {
-//     navigator.serviceWorker
-//       .register("./service-worker.js")
-//       .then(() => console.log("Service Worker enregistré"))
-//       .catch((err) => console.log("Erreur SW:", err));
-//   });
-// }
-
 // recupere le nom du jour en lettre
 import { getNameOfDayFromDate } from "./utils/getNameOfDayFromDate.js";
 import { getCurrentWeek } from "./utils/getCurrentWeek.js";
@@ -16,15 +7,16 @@ import {
   calcAmp,
   getTotalsByType,
 } from "./utils/datasFormating.js";
+// LE STATE (côté serveur)
+import { fetchDays, updateDay, deleteDay } from "../api/daysApi.js";
 
 const daysContainer = document.querySelector(".daysContainer");
 const currentDate = document.getElementById("currentDate");
-const editBtns = document.querySelectorAll(".editBtn");
 
-// LE STATE
+// LE STATE (côté front)
 const state = { days: [] };
 
-const setState = (newState) => {
+const setState = (newState, updatedDays = []) => {
   const updatedState = {
     ...state,
     ...newState,
@@ -32,9 +24,12 @@ const setState = (newState) => {
 
   state.days = updatedState.days;
 
-  localStorage.setItem("days", JSON.stringify(state.days));
+  // on update seulement ce qui est modifié
+  updatedDays.forEach((day) => {
+    updateDay(day);
+  });
 
-  render();
+  render(Number(currentDate.value));
 };
 
 // SELECTION DE LA SEMAINE A AFFICHER
@@ -120,7 +115,12 @@ const editData = (dayId, dataId, dataStart, dataEnd) => {
     };
   });
 
-  setState({ days: newDays });
+  // on ne modifie que la partie du state qu'on veut changer
+  const updatedDay = newDays.find((day) => day.id == dayId);
+
+  if (updatedDay) {
+    setState({ days: newDays }, [updatedDay]);
+  }
 };
 const getDayAmplitude = (datas) => {
   if (datas.length === 0) return "00:00";
@@ -325,8 +325,6 @@ const render = (week) => {
   // on recupere toutes les journées qui ont la même semaine que la semaine en cours
   const daysOfSelectedWeek = state.days.filter((day) => day.week === week);
 
-  console.log(daysOfSelectedWeek);
-
   daysContainer.innerHTML = "";
 
   const fragmentDay = document.createDocumentFragment();
@@ -396,17 +394,16 @@ daysContainer.addEventListener("click", (e) => {
 });
 
 // INITIALISATION
-try {
-  const savedDays = localStorage.getItem("days");
-
-  // si le local storage n'est pas vide, on retransforme les données JSON en tableau pour gérer l'affichage
-  if (savedDays) {
-    state.days = JSON.parse(savedDays);
+async function init() {
+  try {
+    const days = await fetchDays();
+    state.days = days;
+  } catch (error) {
+    console.error("Erreur lors du chargement des données");
   }
-} catch (error) {
-  console.error("Erreur lors du chargement des tâches");
+
+  createListOfWeeks(currentWeek);
+  render(currentWeek);
 }
 
-createListOfWeeks(currentWeek);
-
-render(currentWeek);
+init();
