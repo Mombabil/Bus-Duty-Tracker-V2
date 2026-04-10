@@ -21,16 +21,13 @@ export async function saveDay(day) {
 // EDIT
 export async function updateDay(day) {
   try {
-    const res = await fetch(
-      `$https://backend-bus-duty-tracker-v2-1.onrender.com/days/${day.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(day),
+    const res = await fetch(`${API_URL}/${day.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(day),
+    });
 
     if (!res.ok) {
       throw new Error("Erreur serveur");
