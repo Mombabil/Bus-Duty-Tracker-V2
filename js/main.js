@@ -134,8 +134,6 @@ const addData = (type, detail) => {
 
 const endData = () => {
   const newDays = state.days.map((day) => {
-    if (day.isFinished) return day;
-
     const currentData = day.datas.find((data) => !data.isFinished);
 
     const now = getTime();
@@ -168,16 +166,15 @@ const endData = () => {
 
   setState({ days: newDays });
 
+  console.log(newDays);
+
+  updateDay(newDays);
+
   // sauvegarde le jour terminé
-  const finishedDay = newDays.find((day) => {
-    return day.isFinished && day.end !== "";
-  });
-
-  console.log(finishedDay);
-
-  if (finishedDay) {
-    updateDay(finishedDay);
-  }
+  // const finishedDay = newDays.find((day) => day.isFinished);
+  // if (finishedDay) {
+  //   updateDay(finishedDay);
+  // }
 };
 
 // LES FONCTIONS DE DATAS
