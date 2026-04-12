@@ -8,7 +8,7 @@ import {
   getTotalsByType,
 } from "./utils/datasFormating.js";
 // LE STATE (côté serveur)
-import { fetchDays, updateDay, deleteDay } from "../api/daysApi.js";
+import { fetchDays, updateDays, deleteDay } from "../api/daysApi.js";
 
 const daysContainer = document.querySelector(".daysContainer");
 const currentDate = document.getElementById("currentDate");

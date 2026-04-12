@@ -16,7 +16,7 @@ import {
   calcAmp,
   getTotalsByType,
 } from "./utils/datasFormating.js";
-import { fetchDays, saveDay, updateDay } from "../api/daysApi.js";
+import { fetchDays, saveDay, updateDays } from "../api/daysApi.js";
 
 // SELECTION DES BALISES
 const currentDate = document.querySelector(".currentDate");
