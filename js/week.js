@@ -107,8 +107,16 @@ const editData = (dayId, dataId, dataStart, dataEnd) => {
     const totals = getTotalsByType(updateDatas);
     const amplitude = getDayAmplitude(updateDatas);
 
+    const findStart = updateDatas.map((data) => data.start);
+    const start = findStart[0];
+
+    const findEnd = updateDatas.map((data) => data.end);
+    const end = findEnd[findEnd.length - 1];
+
     return {
       ...day,
+      start,
+      end,
       datas: updateDatas,
       totals,
       amplitude,
