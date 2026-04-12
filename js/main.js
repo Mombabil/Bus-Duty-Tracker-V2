@@ -168,7 +168,7 @@ const endData = () => {
 
   console.log(newDays);
 
-  updateDay(newDays);
+  updateDays(newDays);
 
   // sauvegarde le jour terminé
   // const finishedDay = newDays.find((day) => day.isFinished);
