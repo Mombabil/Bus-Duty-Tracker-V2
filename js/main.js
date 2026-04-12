@@ -16,7 +16,7 @@ import {
   calcAmp,
   getTotalsByType,
 } from "./utils/datasFormating.js";
-import { fetchDays, saveDay, updateDays } from "../api/daysApi.js";
+import { fetchDays, saveDay, updateDay } from "../api/daysApi.js";
 
 // SELECTION DES BALISES
 const currentDate = document.querySelector(".currentDate");
@@ -133,48 +133,45 @@ const addData = (type, detail) => {
 };
 
 const endData = () => {
-  const newDays = state.days.map((day) => {
-    const currentData = day.datas.find((data) => !data.isFinished);
+  const currentDay = state.days[state.days.length - 1];
 
-    const now = getTime();
+  if (!currentDay) return;
 
-    const updateDatas = day.datas.map((data) =>
-      data === currentData
-        ? {
-            ...data,
-            end: now,
-            amplitude: toHHMM(calcAmp(data.start, now)),
-            isFinished: true,
-            id: Date.now(),
-            isEditing: false,
-          }
-        : data,
-    );
+  const now = getTime();
 
-    const totals = getTotalsByType(updateDatas);
+  const currentData = currentDay.datas.find((data) => !data.isFinished);
 
-    return {
-      ...day,
-      end: now,
-      amplitude: toHHMM(calcAmp(day.start, now)),
-      datas: [...updateDatas],
-      totals,
-      isFinished: true,
-      state: "end",
-    };
-  });
+  const updatedDatas = currentDay.datas.map((data) =>
+    data === currentData
+      ? {
+          ...data,
+          end: now,
+          amplitude: toHHMM(calcAmp(data.start, now)),
+          isFinished: true,
+          id: Date.now(),
+          isEditing: false,
+        }
+      : data,
+  );
+
+  const totals = getTotalsByType(updatedDatas);
+
+  const updatedDay = {
+    ...currentDay,
+    end: now,
+    amplitude: toHHMM(calcAmp(currentDay.start, now)),
+    datas: updatedDatas,
+    totals,
+    isFinished: true,
+    state: "end",
+  };
+
+  const newDays = [...state.days];
+  newDays[newDays.length - 1] = updatedDay;
 
   setState({ days: newDays });
 
-  console.log(newDays);
-
-  updateDays(newDays);
-
-  // sauvegarde le jour terminé
-  // const finishedDay = newDays.find((day) => day.isFinished);
-  // if (finishedDay) {
-  //   updateDay(finishedDay);
-  // }
+  updateDay(updatedDay);
 };
 
 // LES FONCTIONS DE DATAS

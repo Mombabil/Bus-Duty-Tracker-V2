@@ -19,9 +19,9 @@ export async function saveDay(day) {
 }
 
 // EDIT
-export async function updateDays(day) {
+export async function updateDay(day) {
   try {
-    const res = await fetch(`${API_URL}`, {
+    const res = await fetch(`${API_URL}/${day.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
