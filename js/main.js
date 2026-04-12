@@ -169,7 +169,9 @@ const endData = () => {
   setState({ days: newDays });
 
   // sauvegarde le jour terminé
-  const finishedDay = newDays.find((day) => !day.isFinished);
+  const finishedDay = newDays.find((day) => {
+    return day.isFinished && day.end !== "";
+  });
 
   console.log(finishedDay);
 
