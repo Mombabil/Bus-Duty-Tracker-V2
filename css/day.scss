@@ -1,5 +1,42 @@
 @import "./settings";
 
+// ----- LOADER ------
+#loader {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    position: fixed;
+    inset: 0;
+    background: $bg-main;
+    color: $text-main;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-family: sans-serif;
+    .timeline {
+        width: 250px;
+        height: 6px;
+        background: #333;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+    
+    .progress {
+        height: 100%;
+        width: 0%;
+        background: $glow-green;
+        transition: width 0.4s ease;
+    }
+}
+
+
+.hidden {
+  display: none !important;
+}
+
+
 .startAndDuration{
     .start, .duration{
         max-width: 100%;

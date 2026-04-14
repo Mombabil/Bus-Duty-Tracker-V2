@@ -17,6 +17,7 @@ import {
   getTotalsByType,
 } from "./utils/datasFormating.js";
 import { fetchDays, saveDay, updateDay } from "../api/daysApi.js";
+import { animateLoader, finishLoader, loaderError } from "./utils/loader.js";
 
 // SELECTION DES BALISES
 const currentDate = document.querySelector(".currentDate");
@@ -365,11 +366,21 @@ endBtn.addEventListener("click", () => {
 
 // INITIALISATION MODIFIÉE
 async function init() {
+  // animation du loader
+  animateLoader();
+
   try {
     const days = await fetchDays();
+
+    // Données recues => fin du loader
+    finishLoader();
+
     state.days = days;
   } catch (error) {
     console.error("Erreur lors du chargement des données");
+
+    // erreur du loader => message utilisateur
+    loaderError();
   }
 
   currentDate.textContent = getCurrentDate();

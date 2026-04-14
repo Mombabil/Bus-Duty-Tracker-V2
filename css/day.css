@@ -121,6 +121,39 @@ body .container footer ul li svg {
   transition: fill 0.1s ease-in-out;
 }
 
+#loader {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  position: fixed;
+  inset: 0;
+  background: hsl(235, 78%, 13%);
+  color: hsl(0, 0%, 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  font-family: sans-serif;
+}
+#loader .timeline {
+  width: 250px;
+  height: 6px;
+  background: #333;
+  border-radius: 3px;
+  overflow: hidden;
+}
+#loader .progress {
+  height: 100%;
+  width: 0%;
+  background: hsl(109, 80%, 55%);
+  transition: width 0.4s ease;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .startAndDuration .start, .startAndDuration .duration {
   max-width: 100%;
   width: 100%;
