@@ -226,12 +226,22 @@ function loadRoutes() {
     const chunks = splitPoints(points);
 
     div.innerHTML = `
-      <strong>${route.name}</strong><br>
-      🚌 ${route.distance} km • ⏱️ ${route.duration} min<br>
-      🟢 ${stops.length} arrêts / ⚫ ${points.length - stops.length} passages<br>
-      🛑 ${stops.map((s) => s.name).join(" → ") || "Aucun"}
+      <h3>${route.name}</h3>
+      <p>🚌 ${route.distance} km • ⏱️ ${route.duration} min</p>
+      <p class="route-item-stops">🟢 ${stops.length} arrêts / ⚫ ${points.length - stops.length} passages <button id="showDetail">Détail</button></p>
+      <ul id="routeItemDetail">${
+        stops
+          .map(
+            (s) =>
+              `
+            <li>
+            🛑 ${s.name}
+            </li>
+            `,
+          )
+          .join("") || "Aucun"
+      }</ul>
     `;
-
     // -----------------------------
     // 🌍 GOOGLE MAPS BUTTONS
     // -----------------------------
@@ -270,6 +280,10 @@ function loadRoutes() {
     div.appendChild(del);
 
     container.appendChild(div);
+  });
+
+  showDetail.addEventListener("click", () => {
+    routeItemDetail.classList.toggle("show-route-item-detail");
   });
 }
 

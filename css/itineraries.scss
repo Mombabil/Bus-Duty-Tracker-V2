@@ -14,27 +14,41 @@ body{
         max-height: 400px;
         overflow: auto;
         z-index: 1000;
-        background: white;
+        background: $bg-panel;
+        color: $text-main;
+        font-family: "Inter", sans-serif;
         padding: 10px;
-        border-radius: 8px;
+        border-radius: 4px;
     }
 
     .route-item {
         padding: 8px;
-        border-bottom: 1px solid #ddd;
         cursor: pointer;
+        background: $border-soft;
+        h3, p{
+            margin: 0 0 4px 0;
+        }
+        .route-item-stops{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        #routeItemDetail{
+            display: none;
+        }
+        .show-route-item-detail{
+            display: block !important;
+        }
     }
     #route-info {
-        transform: translateX(-50%);
-        z-index: 1000;
-
-        background: white;
+        background: $service;
+        color: $text-main;
+        width: 90%;
+        text-align: center;
         padding: 8px 12px;
-        border-radius: 8px;
-        font-family: sans-serif;
-        font-size: 14px;
-
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        border-radius: 4px;
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.9em;
     }
     #map{
         height: 500px;
