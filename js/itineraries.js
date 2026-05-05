@@ -195,7 +195,7 @@ function loadRoutes() {
 
     div.innerHTML = `
       <strong>${route.name}</strong><br>
-      🚗 ${route.distance} km • ⏱️ ${route.duration} min<br>
+      🚌 ${route.distance} km • ⏱️ ${route.duration} min<br>
       🟢 ${stops.length} arrêts / ⚫ ${points.length - stops.length} passages<br>
       🛑 ${stops.map((s) => s.name).join(" → ") || "Aucun"}
     `;
