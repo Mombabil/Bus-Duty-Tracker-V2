@@ -1,5 +1,5 @@
 // =========================================================
-// 🚌 BUS APP - VERSION STRUCTURÉE (stops + waypoints)
+// 🚌 BUS APP - VERSION AVEC ICÔNES PRO
 // =========================================================
 
 // -----------------------------
@@ -7,8 +7,31 @@
 // -----------------------------
 const DEPOT = {
   name: "Dépôt Montbrison",
-  coords: [45.59527, 4.09141],
+  coords: [45.6073, 4.0627],
 };
+
+// -----------------------------
+// 🎨 ICÔNES LEAFLET
+// -----------------------------
+const depotIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
+  iconSize: [32, 32],
+});
+
+const stopIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/61/61168.png",
+  iconSize: [30, 30],
+});
+
+const waypointIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/565/565547.png",
+  iconSize: [26, 26],
+});
+
+const busIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/61/61168.png",
+  iconSize: [36, 36],
+});
 
 // -----------------------------
 // 🌍 CARTE
@@ -22,7 +45,10 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);
 
-L.marker(DEPOT.coords).addTo(map).bindPopup("📍 Dépôt Montbrison");
+// 📍 marker dépôt
+L.marker(DEPOT.coords, { icon: depotIcon })
+  .addTo(map)
+  .bindPopup("🏠 Dépôt Montbrison");
 
 // -----------------------------
 // 🧭 ROUTING
@@ -40,14 +66,14 @@ const control = L.Routing.control({
 }).addTo(map);
 
 // -----------------------------
-// 📦 STATE
+// 📦 STATE GLOBAL
 // -----------------------------
 let currentRouteData = null;
 
 const infoDiv = document.getElementById("route-info");
 
 // =========================================================
-// 📍 AJOUT POINT (STOP ou WAYPOINT)
+// 📍 AJOUT POINT (STOP / WAYPOINT)
 // =========================================================
 map.on("click", (e) => {
   if (!currentRouteData) {
@@ -86,20 +112,26 @@ map.on("click", (e) => {
 });
 
 // =========================================================
-// 🎨 AFFICHAGE POINTS SUR CARTE
+// 🎨 AFFICHAGE POINTS
 // =========================================================
 function renderPoint(point, latlng) {
-  const icon = point.type === "stop" ? "🟢" : "⚫";
+  let icon;
 
-  L.marker(latlng).addTo(map).bindPopup(`
-      ${icon} ${point.type.toUpperCase()}<br>
+  if (point.type === "stop") {
+    icon = stopIcon;
+  } else {
+    icon = waypointIcon;
+  }
+
+  L.marker(latlng, { icon }).addTo(map).bindPopup(`
+      <strong>${point.type.toUpperCase()}</strong><br>
       ${point.name || "Passage"}<br>
       ${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}
     `);
 }
 
 // =========================================================
-// 📊 CALCUL ROUTE
+// 📊 ROUTE CALCUL
 // =========================================================
 control.on("routesfound", (e) => {
   const route = e.routes[0];
@@ -112,7 +144,7 @@ control.on("routesfound", (e) => {
 
   infoDiv.style.display = "block";
   infoDiv.innerHTML = `
-    🚗 ${distance.toFixed(1)} km • ⏱️ ${Math.round(duration)} min
+    🚌 ${distance.toFixed(1)} km • ⏱️ ${Math.round(duration)} min
   `;
 });
 
@@ -146,7 +178,7 @@ document.getElementById("save-route").addEventListener("click", () => {
 // =========================================================
 const GOOGLE_MAX = 10;
 
-function splitStops(points) {
+function splitPoints(points) {
   const chunks = [];
   for (let i = 0; i < points.length; i += GOOGLE_MAX - 1) {
     chunks.push(points.slice(i, i + GOOGLE_MAX));
@@ -191,7 +223,7 @@ function loadRoutes() {
     const points = route.points || [];
 
     const stops = points.filter((p) => p.type === "stop");
-    const chunks = splitStops(points);
+    const chunks = splitPoints(points);
 
     div.innerHTML = `
       <strong>${route.name}</strong><br>
@@ -242,7 +274,7 @@ function loadRoutes() {
 }
 
 // =========================================================
-// 🧭 CHARGER SUR CARTE
+// 🧭 CHARGER ITINÉRAIRE
 // =========================================================
 function loadRoute(route) {
   const points = route.points || [];
@@ -255,6 +287,10 @@ function loadRoute(route) {
     ...route,
     points,
   };
+
+  if (points.length > 0) {
+    map.setView([points[0].lat, points[0].lng], 15);
+  }
 }
 
 // =========================================================
