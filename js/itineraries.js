@@ -1,26 +1,28 @@
 // =========================================================
-// 🗺️ BUS DUTY TRACKER - VERSION PROPRE SIMPLIFIÉE
+// 🚌 BUS APP - VERSION STRUCTURÉE (stops + waypoints)
 // =========================================================
+
+// -----------------------------
+// 📍 DÉPÔT
+// -----------------------------
+const DEPOT = {
+  name: "Dépôt Montbrison",
+  coords: [45.59527, 4.09141],
+};
 
 // -----------------------------
 // 🌍 CARTE
 // -----------------------------
-const DEPOT = [45.59528, 4.0914];
-
 const map = L.map("map", {
-  center: DEPOT,
-  zoom: 13,
+  center: DEPOT.coords,
+  zoom: 14,
 });
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
 }).addTo(map);
 
-L.marker(DEPOT).addTo(map).bindPopup("📍 Dépôt Montbrison");
-
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-}).addTo(map);
+L.marker(DEPOT.coords).addTo(map).bindPopup("📍 Dépôt Montbrison");
 
 // -----------------------------
 // 🧭 ROUTING
@@ -31,37 +33,46 @@ const control = L.Routing.control({
   draggableWaypoints: true,
   addWaypoints: true,
   show: false,
+  fitSelectedRoutes: false,
   router: L.Routing.osrmv1({
     serviceUrl: "https://router.project-osrm.org/route/v1",
   }),
 }).addTo(map);
 
 // -----------------------------
-// 📦 STATE GLOBAL
+// 📦 STATE
 // -----------------------------
 let currentRouteData = null;
 
 const infoDiv = document.getElementById("route-info");
 
 // =========================================================
-// 📍 AJOUT ARRÊTS
+// 📍 AJOUT POINT (STOP ou WAYPOINT)
 // =========================================================
 map.on("click", (e) => {
   if (!currentRouteData) {
-    currentRouteData = { stops: [] };
+    currentRouteData = { points: [] };
   }
 
-  const name = prompt("Nom de l'arrêt ?");
-  if (!name) return;
+  const type = prompt("Type : stop / waypoint");
+  if (type !== "stop" && type !== "waypoint") return;
 
-  const stop = {
+  let name = null;
+
+  if (type === "stop") {
+    name = prompt("Nom de l'arrêt ?");
+    if (!name) return;
+  }
+
+  const point = {
     id: crypto.randomUUID(),
+    type,
     name,
     lat: e.latlng.lat,
     lng: e.latlng.lng,
   };
 
-  currentRouteData.stops.push(stop);
+  currentRouteData.points.push(point);
 
   const waypoints = control
     .getWaypoints()
@@ -70,7 +81,22 @@ map.on("click", (e) => {
 
   waypoints.push(e.latlng);
   control.setWaypoints(waypoints);
+
+  renderPoint(point, e.latlng);
 });
+
+// =========================================================
+// 🎨 AFFICHAGE POINTS SUR CARTE
+// =========================================================
+function renderPoint(point, latlng) {
+  const icon = point.type === "stop" ? "🟢" : "⚫";
+
+  L.marker(latlng).addTo(map).bindPopup(`
+      ${icon} ${point.type.toUpperCase()}<br>
+      ${point.name || "Passage"}<br>
+      ${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}
+    `);
+}
 
 // =========================================================
 // 📊 CALCUL ROUTE
@@ -96,7 +122,7 @@ control.on("routesfound", (e) => {
 document.getElementById("save-route").addEventListener("click", () => {
   const name = document.getElementById("route-name").value.trim();
 
-  if (!name || !currentRouteData?.stops?.length) {
+  if (!name || !currentRouteData?.points?.length) {
     alert("Nom ou itinéraire invalide");
     return;
   }
@@ -116,25 +142,25 @@ document.getElementById("save-route").addEventListener("click", () => {
 });
 
 // =========================================================
-// 🧭 GOOGLE MAPS HELPERS
+// 🌍 GOOGLE MAPS
 // =========================================================
 const GOOGLE_MAX = 10;
 
-function splitStops(stops) {
+function splitStops(points) {
   const chunks = [];
-  for (let i = 0; i < stops.length; i += GOOGLE_MAX - 1) {
-    chunks.push(stops.slice(i, i + GOOGLE_MAX));
+  for (let i = 0; i < points.length; i += GOOGLE_MAX - 1) {
+    chunks.push(points.slice(i, i + GOOGLE_MAX));
   }
   return chunks;
 }
 
-function buildGoogleLink(stops) {
-  const origin = `${stops[0].lat},${stops[0].lng}`;
-  const destination = `${stops.at(-1).lat},${stops.at(-1).lng}`;
+function buildGoogleLink(points) {
+  const origin = `${points[0].lat},${points[0].lng}`;
+  const destination = `${points.at(-1).lat},${points.at(-1).lng}`;
 
-  const waypoints = stops
+  const waypoints = points
     .slice(1, -1)
-    .map((s) => `${s.lat},${s.lng}`)
+    .map((p) => `${p.lat},${p.lng}`)
     .join("|");
 
   let url = `https://www.google.com/maps/dir/?api=1`;
@@ -150,7 +176,7 @@ function buildGoogleLink(stops) {
 }
 
 // =========================================================
-// 📜 AFFICHAGE ITINÉRAIRES
+// 📜 LISTE ITINÉRAIRES
 // =========================================================
 function loadRoutes() {
   const container = document.getElementById("routes-list");
@@ -162,18 +188,20 @@ function loadRoutes() {
     const div = document.createElement("div");
     div.className = "route-item";
 
-    const stops = route.stops || [];
-    const chunks = splitStops(stops);
+    const points = route.points || [];
+
+    const stops = points.filter((p) => p.type === "stop");
+    const chunks = splitStops(points);
 
     div.innerHTML = `
       <strong>${route.name}</strong><br>
       🚗 ${route.distance} km • ⏱️ ${route.duration} min<br>
-      📍 ${stops.length} arrêts<br>
-      🛑 ${stops.map((s) => s.name || "Sans nom").join(" → ")}
+      🟢 ${stops.length} arrêts / ⚫ ${points.length - stops.length} passages<br>
+      🛑 ${stops.map((s) => s.name).join(" → ") || "Aucun"}
     `;
 
     // -----------------------------
-    // 🧭 GOOGLE MAPS BUTTONS
+    // 🌍 GOOGLE MAPS BUTTONS
     // -----------------------------
     chunks.forEach((chunk, i) => {
       const btn = document.createElement("button");
@@ -188,7 +216,7 @@ function loadRoutes() {
     });
 
     // -----------------------------
-    // 🧭 CHARGER SUR CARTE
+    // 🗺 CHARGER ITINÉRAIRE
     // -----------------------------
     div.addEventListener("click", () => loadRoute(route));
 
@@ -214,16 +242,18 @@ function loadRoutes() {
 }
 
 // =========================================================
-// 📥 CHARGER ITINÉRAIRE SUR MAP
+// 🧭 CHARGER SUR CARTE
 // =========================================================
 function loadRoute(route) {
-  const waypoints = (route.stops || []).map((s) => L.latLng(s.lat, s.lng));
+  const points = route.points || [];
+
+  const waypoints = points.map((p) => L.latLng(p.lat, p.lng));
 
   control.setWaypoints(waypoints);
 
   currentRouteData = {
     ...route,
-    stops: route.stops || [],
+    points,
   };
 }
 
