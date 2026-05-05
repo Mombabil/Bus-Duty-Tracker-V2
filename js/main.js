@@ -128,6 +128,8 @@ const addData = (type, detail) => {
 
   // sauvegarde uniquement le jour modifié
   const updatedDay = newDays.find((day) => !day.isFinished);
+  console.log(updatedDay);
+
   if (updatedDay) {
     updateDay(updatedDay);
   }
